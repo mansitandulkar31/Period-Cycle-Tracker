@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cycle Tracker By Mansi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <h1>Cycle Tracker</h1>
+        <p class="hero-copy">
+          A unique, real-calendar period tracker built with only HTML, CSS, and JavaScript.
+          Track bleeding days, symptoms, mood, notes, predictions, and fertile windows locally in your browser.
+        </p>
+      </div>
+      <div class="hero-card">
+        <p class="hero-card-label">Today</p>
+        <h2 id="todayStatus">Loading your cycle...</h2>
+        <p id="todayMeta" class="muted">Calculating cycle day and predictions.</p>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="panel panel-accent">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Cycle setup</p>
+            <h2>Your baseline</h2>
+          </div>
+        </div>
+
+        <form id="settingsForm" class="form-grid">
+          <label>
+            <span>Average cycle length</span>
+            <input type="number" id="cycleLength" min="20" max="45" required>
+          </label>
+
+          <label>
+            <span>Average period length</span>
+            <input type="number" id="periodLength" min="2" max="10" required>
+          </label>
+
+          <label>
+            <span>Last period start date</span>
+            <input type="date" id="lastPeriodStart" required>
+          </label>
+
+          <label>
+            <span>Goal</span>
+            <select id="trackingGoal">
+              <option value="balance">General tracking</option>
+              <option value="pregnancy">Trying to conceive</option>
+              <option value="awareness">Body awareness</option>
+              <option value="planning">Routine planning</option>
+            </select>
+          </label>
+
+          <button type="submit" class="primary-btn">Save cycle settings</button>
+        </form>
+      </section>
+
+      <section class="stats-grid">
+        <article class="panel stat-card">
+          <p class="stat-label">Next predicted period</p>
+          <h3 id="nextPeriodDate">-</h3>
+          <p id="periodCountdown" class="muted">Add your cycle settings to begin.</p>
+        </article>
+
+        <article class="panel stat-card">
+          <p class="stat-label">Estimated ovulation</p>
+          <h3 id="ovulationDate">-</h3>
+          <p id="fertileWindow" class="muted">Fertile window will appear here.</p>
+        </article>
+
+        <article class="panel stat-card">
+          <p class="stat-label">Current cycle day</p>
+          <h3 id="cycleDay">-</h3>
+          <p id="phaseName" class="muted">Cycle phase shown after setup.</p>
+        </article>
+      </section>
+
+      <section class="panel calendar-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Real calendar</p>
+            <h2>Cycle calendar</h2>
+          </div>
+
+          <div class="calendar-actions">
+            <button id="prevMonth" type="button" class="ghost-btn">Previous</button>
+            <h3 id="calendarTitle"></h3>
+            <button id="nextMonth" type="button" class="ghost-btn">Next</button>
+          </div>
+        </div>
+
+        <div class="calendar-weekdays" id="calendarWeekdays"></div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </section>
+
+      <section class="details-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Daily log</p>
+              <h2>Track one day</h2>
+            </div>
+          </div>
+
+          <form id="dailyLogForm" class="form-grid">
+            <label>
+              <span>Date</span>
+              <input type="date" id="logDate" required>
+            </label>
+
+            <label>
+              <span>Flow</span>
+              <select id="flowLevel">
+                <option value="none">None</option>
+                <option value="spotting">Spotting</option>
+                <option value="light">Light</option>
+                <option value="medium">Medium</option>
+                <option value="heavy">Heavy</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Cramp level</span>
+              <select id="crampLevel">
+                <option value="none">None</option>
+                <option value="mild">Mild</option>
+                <option value="moderate">Moderate</option>
+                <option value="strong">Strong</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Mood</span>
+              <select id="mood">
+                <option value="steady">Steady</option>
+                <option value="happy">Happy</option>
+                <option value="low">Low</option>
+                <option value="irritable">Irritable</option>
+                <option value="tired">Tired</option>
+                <option value="energetic">Energetic</option>
+              </select>
+            </label>
+
+            <label class="full-width">
+              <span>Symptoms</span>
+              <div class="tag-grid" id="symptomTags"></div>
+            </label>
+
+            <label class="full-width">
+              <span>Notes</span>
+              <textarea id="notes" rows="4" placeholder="Energy, cravings, exercise, sleep, anything important..."></textarea>
+            </label>
+
+            <button type="submit" class="primary-btn">Save daily entry</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Selected day</p>
+              <h2>Day details</h2>
+            </div>
+          </div>
+
+          <div id="selectedDayCard" class="selected-day-card">
+            <p class="muted">Select a date from the calendar to view details.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="insights-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">What to do</p>
+              <h2>Support guidance</h2>
+            </div>
+          </div>
+          <ul id="doList" class="tips-list"></ul>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">What not to do</p>
+              <h2>Gentle cautions</h2>
+            </div>
+          </div>
+          <ul id="dontList" class="tips-list"></ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
